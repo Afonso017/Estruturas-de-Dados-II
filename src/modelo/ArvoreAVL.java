@@ -7,6 +7,16 @@ public class ArvoreAVL {
 
 	}
 
+	public void ordem() {
+		this.ordem(raiz);
+	}
+
+	private void ordem(No arv) {
+		ordem(arv.esq);
+		System.out.println(arv.valor);
+		ordem(arv.dir);
+	}
+
 	public void inserir(int ch, String v) {
 		raiz = inserir(raiz, ch, v);
 	}
@@ -76,8 +86,8 @@ public class ArvoreAVL {
 		return temp;
 	}
 
-	private No remover(No arv, int ch) {
-
+	public void remover(int ch, String v) {
+		raiz = remover(raiz, ch, v);
 	}
 
 	private No remover(No arv, int ch, String v) {
@@ -85,9 +95,31 @@ public class ArvoreAVL {
 			return arv;
 
 		if (ch < arv.chave)
-			arv.esq = remover(arv.esq, ch);
-		else
-			arv.dir = remover(arv.esq, ch);
+			arv.esq = remover(arv.esq, ch, v);
+		else if (ch > arv.chave)
+			arv.dir = remover(arv.esq, ch, v);
+		else {
+			if (arv.esq == null && arv.dir == null)
+				arv = null;
+			else if (arv.esq == null) {
+				No temp = arv;
+				arv = temp.dir;
+				temp = null;
+			} else if (arv.dir == null) {
+				No temp = arv;
+				arv = temp.esq;
+				temp = null;
+			} else {
+				No temp = menorChave(arv.dir);
+				arv.chave = temp.chave;
+				arv.valor = temp.valor;
+				temp.chave = ch;
+				temp.valor = v;
+				arv.dir = remover(arv.dir, temp.chave, v);
+			}
+		}
+
+		return arv;
 	}
 
 	private No rotacaoEsquerdaSimples(No x) {
